@@ -6,50 +6,38 @@ import { getUserByEmailAndPassword } from './userData';
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [modalMessage, setModalMessage] = useState('');
-  const [showModal, setShowModal] = useState(false);
 
   const performLoginLogic = (e) => {
     e.preventDefault();
-  
+
     // Check Internet Connection (CASE 1)
     if (!navigator.onLine) {
-      setModalMessage("No internet connection available.");
-      setShowModal(true);
+      alert("No internet connection available.");
       return;
     }
-  
+
     // Check if email or password is empty (CASE 2.1)
     if (!email.trim() || !password.trim()) {
-      setModalMessage("Email and password are required.");
-      setShowModal(true);
+      alert("Email and password are required.");
       return;
     }
-  
+
     // Check if user is valid or not
     const user = getUserByEmailAndPassword(email, password);
     if (user) {
       // successful login (CASE 3)
-      setModalMessage("Successfully logged in");
-      setShowModal(true);
+      alert("Successfully logged in");
     } else { // CASE (2.2)
-      setModalMessage("Invalid email or password");
-      setShowModal(true);
+      alert("Invalid email or password");
     }
   }
 
-  const handleCloseModal = () => {
-    setShowModal(false);
-  }
-
   const responseMessage = (response) => { // CASE 4
-    setModalMessage("Successfully logged in using Google Auth");
-    setShowModal(true);
+    alert("Successfully logged in using Google Auth");
   };
 
   const errorMessage = (error) => { // CASE 5
-    setModalMessage("Error logging in with Google Auth");
-    setShowModal(true);
+    alert("Error logging in with Google Auth");
   };
 
   return (
@@ -76,15 +64,6 @@ const LoginPage = () => {
           />
         </div>
       </div>
-
-      {showModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={handleCloseModal}>&times;</span>
-            <p>{modalMessage}</p>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
