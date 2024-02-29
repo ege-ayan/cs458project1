@@ -82,12 +82,21 @@ class LoginPage(BasePage):
         return self.fill_form(email, password, expected_message)
     
 
-     # Case 4 valid log in with Google
+    # Case 4 valid log in with Google
     def valid_google_login(self):
         expected_message = "Successfully logged in using Google Auth"
-
         google_email = "userexample49@gmail.com"
         google_password = "!Psw7818"
+        return self.google_login(google_email, google_password, expected_message)
+
+    # Case 5 invalid log in with Google
+    def invalid_google_login(self):
+        expected_message = "Error logging in with Google Auth"
+        google_email = "userexample49@gmail.com"
+        google_password = "invpsw" # Wrong password for the given user email
+        return self.google_login(google_email, google_password, expected_message)
+    
+    def google_login(self, google_email, google_password, expected_message):
         google_sign_in_button = self.driver.find_element(By.CSS_SELECTOR, ".google-login-button")
         time.sleep(0.5)
         google_sign_in_button.click()
@@ -104,7 +113,7 @@ class LoginPage(BasePage):
         time.sleep(2)
         password_input.send_keys(Keys.ENTER)
         self.driver.switch_to.window(self.driver.window_handles[0])
-        time.sleep(4) # Wait for the alert to be present
+        time.sleep(6) # Wait for the alert to be present
         try:
             # Switch to the alert
             alert = Alert(self.driver)
@@ -119,7 +128,6 @@ class LoginPage(BasePage):
         if alert_text == expected_message:
             return True
         return False
-    
 
     # Case 1 detect the existence of the internet connection
     def is_internet_available(self):
