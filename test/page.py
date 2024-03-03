@@ -94,9 +94,33 @@ class LoginPage(BasePage):
         expected_message = "Error logging in with Google Auth"
         google_email = "userexample49@gmail.com"
         google_password = "invpsw" # Wrong password for the given user email
-        return self.google_login(google_email, google_password, expected_message)
+        return self.google_login_inv(google_email, google_password, expected_message)
     
+    def google_login_inv(self, google_email, google_password, expected_message):
+        time.sleep(1) # sleep to wait google login button to be visible
+        google_sign_in_button = self.driver.find_element(By.CSS_SELECTOR, ".google-login-button")
+        time.sleep(0.5)
+        google_sign_in_button.click()
+
+        new_window = self.driver.window_handles[-1]
+        self.driver.switch_to.window(new_window)
+        email_input = WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//input[@type='email']")))
+        
+        email_input.send_keys(google_email)
+        email_input.send_keys(Keys.ENTER)
+
+        password_input = WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//input[@type='password']")))
+        password_input.send_keys(google_password)
+        time.sleep(2)
+        password_input.send_keys(Keys.ENTER)
+        error_message = WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "span[jsslot='']")))
+        self.driver.switch_to.window(self.driver.window_handles[0])
+        if error_message is not None:
+            return True
+        return False
+
     def google_login(self, google_email, google_password, expected_message):
+        time.sleep(1) # sleep to wait google login button to be visible
         google_sign_in_button = self.driver.find_element(By.CSS_SELECTOR, ".google-login-button")
         time.sleep(0.5)
         google_sign_in_button.click()
