@@ -14,11 +14,11 @@ class LoginTest(unittest.TestCase):
         self.driver.get("http://localhost:3000")
 
     def test_all(self):
-
+        
         self.correct_credentials()
         self.invalid_credentials()
         self.empty_credentials()
-
+        
         login_page = page.LoginPage(self.driver)
         self.assertTrue(login_page.invalid_google_login())
         self.assertTrue(login_page.valid_google_login())
